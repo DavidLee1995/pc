@@ -7,29 +7,44 @@
     </div>
   </el-form-item>
   <el-form-item prop="username">
-    <el-input v-model="myform.username"  prefix-icon="myicon myicon-user"></el-input>
+    <el-input v-model="myform.username"  prefix-icon="myicon myicon-user" placeholder="请输入用户名"></el-input>
   </el-form-item>
   <el-form-item prop="password">
-    <el-input v-model="myform.password"  prefix-icon="myicon myicon-key" type="password"></el-input>
+    <el-input v-model="myform.password"  prefix-icon="myicon myicon-key"  placeholder="请输入密码" type="password" @keydown.native.enter="hendlerLigin"></el-input>
   </el-form-item>
   <el-form-item>
-     <el-button  class="login-btn" type="primary">登录</el-button>
+     <el-button  class="login-btn" type="primary" @click="hendlerLigin" >登录</el-button>
   </el-form-item>
   </el-form>
   </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   data () {
     return {
       myform: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       myrules: {
-        username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       }
+    }
+  },
+  methods: {
+    hendlerLigin () {
+      axios.post('http://127.0.0.1:8888/api/private/v1/login', this.myform)
+        .then(res => {
+          console.log(res)
+
+          if (res.data.meta.status === 200) {
+            this.$router.push({name: 'home'})
+          }
+        })
     }
   }
 }
