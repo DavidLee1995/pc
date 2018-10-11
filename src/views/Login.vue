@@ -13,13 +13,14 @@
     <el-input v-model="myform.password"  prefix-icon="myicon myicon-key"  placeholder="请输入密码" type="password" @keydown.native.enter="hendlerLigin"></el-input>
   </el-form-item>
   <el-form-item>
-     <el-button  class="login-btn" type="primary" @click="hendlerLigin" >登录</el-button>
+     <el-button  class="login-btn" type="primary" @click="hendlerLigin('form')" >登录</el-button>
   </el-form-item>
   </el-form>
   </div>
 </template>
 <script>
-import axios from 'axios'
+import { handleLogin } from '@/api'
+// import axios from 'axios'
 export default {
   data () {
     return {
@@ -35,16 +36,34 @@ export default {
       }
     }
   },
+  // methods: {
+  //   hendlerLigin () {
+  //     axios.post('http://127.0.0.1:8888/api/private/v1/login', this.myform)
+  //       .then(res => {
+  //         console.log(res)
+  //         if (res.data.meta.status === 200) {
+  //           this.$router.push({name: 'home'})
+  //         }
+  //       })
+  //   }
+  // }
   methods: {
-    hendlerLigin () {
-      axios.post('http://127.0.0.1:8888/api/private/v1/login', this.myform)
-        .then(res => {
-          console.log(res)
-
-          if (res.data.meta.status === 200) {
-            this.$router.push({name: 'home'})
+    hendlerLigin (formName) {
+      this.$refs[formName].validate(valid => {
+        handleLogin(this.myform).then(res => {
+          if (res.meta.status === 200) {
+            localStorage.setItem('myToken', res.data.token)
+            this.$router.push({ name: 'home' })
+          } else {
+            this.$notify({
+              title: '错误',
+              message: '账号或者密码错误',
+              type: 'warning'
+            })
+            return false
           }
         })
+      })
     }
   }
 }
