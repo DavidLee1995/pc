@@ -53,6 +53,7 @@ export default {
         handleLogin(this.myform).then(res => {
           if (res.meta.status === 200) {
             localStorage.setItem('myToken', res.data.token)
+            localStorage.setItem('username', res.data.username)
             this.$router.push({ name: 'home' })
           } else {
             this.$notify({
