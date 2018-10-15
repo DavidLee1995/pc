@@ -6,22 +6,22 @@
           <div class="logo"></div>
            <el-menu
               default-active="1"
+              router
               background-color="#f9f9f9"
               :collapse="isCollapse"
               class="el-menu-admin"
               @open="handleOpen"
               @close="handleClose">
-              <el-submenu index="1">
+              <el-submenu :index="firstItem.path" v-for="(firstItem,index) in menuInfo" :key="index">
                 <template slot="title">
                   <i class="el-icon-location"></i>
-                  <span>用户数据</span>
+                  <span>{{firstItem.authName}}</span>
                 </template>
-                <el-menu-item index="2">
+                <el-menu-item :index="secondItem.path" v-for="(secondItem,index) in firstItem.children" :key="index">
                   <i class="el-icon-menu"></i>
-                  <span slot="title">用户列表</span>
+                  <span slot="title">{{secondItem.authName}}</span>
                 </el-menu-item>
               </el-submenu>
-
             </el-menu>
         </el-aside>
         <el-container>
@@ -44,18 +44,27 @@
 </template>
 
 <script>
-import { userList } from '@/api'
+import { userList, menuList } from '@/api'
 export default {
   data () {
     return {
       isCollapse: false,
-      username: '????'
+      username: '????',
+      menuInfo: []
     }
   },
   mounted () {
     this.username = localStorage.getItem('username')
     userList(this.objs)
   },
+  created () {
+    menuList()
+      .then(res => {
+        this.menuInfo = res.data
+        console.log(res)
+      })
+  },
+
   methods: {
     handleOpen (key, keyPath) {
       console.log(key, keyPath)

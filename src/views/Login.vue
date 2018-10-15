@@ -10,7 +10,7 @@
     <el-input v-model="myform.username"  prefix-icon="myicon myicon-user" placeholder="请输入用户名"></el-input>
   </el-form-item>
   <el-form-item prop="password">
-    <el-input v-model="myform.password"  prefix-icon="myicon myicon-key"  placeholder="请输入密码" type="password" @keydown.native.enter="hendlerLigin"></el-input>
+    <el-input v-model="myform.password"  prefix-icon="myicon myicon-key"  placeholder="请输入密码" type="password" @keydown.native.enter="hendlerLigin('form')"></el-input>
   </el-form-item>
   <el-form-item>
      <el-button  class="login-btn" type="primary" @click="hendlerLigin('form')" >登录</el-button>
@@ -56,9 +56,9 @@ export default {
             localStorage.setItem('username', res.data.username)
             this.$router.push({ name: 'home' })
           } else {
-            this.$notify({
+            this.$message({
               title: '错误',
-              message: '账号或者密码错误',
+              message: res.meta.msg,
               type: 'warning'
             })
             return false
