@@ -32,6 +32,10 @@ export const editUser = obj => axios.put(`/users/${obj.id}`, obj).then(res => re
 export const grantRoles = obj => axios.get('/roles').then(res => res.data)
 // 角色分配
 export const grantGive = obj => axios.put(`/users/${obj.id}/role`, { rid: obj.rid }).then(res => res.data)
+// 添加角色
+export const addRoles = obj => axios.post(`roles`, obj).then(res => res.data)
+// 编辑角色信息
+export const eidtoles = obj => axios.put(`roles/${obj.id}`, obj).then(res => res.data)
 // 权限列表
 export const RightsList = type => axios.get(`/rights/${type}`).then(res => res.data)
 // 删除权限
@@ -46,3 +50,7 @@ export const categories = obj => axios.get(`/categories`, { params: { query: obj
 export const addGoodsBtn = typemun => axios.get(`/categories`, { params: typemun.type }).then(res => res.data)
 // 添加商品分类名称
 export const addGoodsName = obj => axios.post(`/categories`, obj).then(res => res.data)
+// 删除商品分类
+export const delGoodsName = id => axios.delete(`categories/${id}`).then(res => res.data)
+// 编辑商品分类
+export const editGoodsName = obj => axios.put(`categories/${obj.id}`, {cat_name: obj.cat_name}).then(res => res.data)

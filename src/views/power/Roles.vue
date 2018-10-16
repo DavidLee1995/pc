@@ -4,10 +4,10 @@
      <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item>权限列表</el-breadcrumb-item>
+      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加用户按钮 -->
-      <el-button type="primary">添加用户</el-button>
+      <el-button type="primary" @click="addUserInfo">添加用户</el-button>
     <!-- 权限列表 -->
     <el-table
     :data="RolesData"
@@ -66,7 +66,7 @@
       prop="address"
       label="操作">
       <template slot-scope="scope">
-          <el-button size="small" type="primary"  plain icon="el-icon-edit" ></el-button>
+          <el-button size="small" type="primary"  plain icon="el-icon-edit" @click="handelEdit(scope.row)"></el-button>
           <el-button size="small" type="danger"  plain icon="el-icon-delete" @click="handelDel(scope.row)"></el-button>
           <el-button size="small" type="warning"  plain icon="el-icon-check" @click="handelGrant(scope.row)"></el-button>
        </template>
@@ -95,15 +95,68 @@
     <el-button type="primary" @click="subMintGrant">确 定</el-button>
   </span>
 </el-dialog>
+
+<!-- 添加用户弹框 -->
+    <el-button  type="text" @click="isShowUser = true"></el-button>
+      <el-dialog title="添加用户" :visible.sync="isShowUser">
+      <el-form :model="myAddForm" :rules="myRules" ref="myRef">
+        <el-form-item label="角色名字" :label-width="formLabelWidth" prop="roleName">
+          <el-input v-model="myAddForm.roleName" auto-complete="off" ></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述" :label-width="formLabelWidth"  prop="roleDesc">
+          <el-input v-model="myAddForm.roleDesc" auto-complete="off" @keydown.native.enter="subMintRoles('myRef')"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isShowUser = false">取 消</el-button>
+        <el-button type="primary" @click="subMintRoles('myRef')">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 编辑用户弹框 -->
+    <el-button  type="text" @click="isShowEditer = true"></el-button>
+      <el-dialog title="添加用户" :visible.sync="isShowEditer">
+      <el-form :model="myEditForm" :rules="myRules" ref="myRef">
+        <el-form-item label="角色名字" :label-width="formLabelWidth" prop="roleName">
+          <el-input v-model="myEditForm.roleName" auto-complete="off" ></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述" :label-width="formLabelWidth"  prop="roleDesc">
+          <el-input v-model="myEditForm.roleDesc" auto-complete="off" @keydown.native.enter="editRoles('myRef')"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isShowEditer = false">取 消</el-button>
+        <el-button type="primary" @click="editRoles('myRef')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {grantRoles, delRight, RightsList, rightGrant, deleRoles} from '@/api'
+import {grantRoles, delRight, RightsList, rightGrant, deleRoles, addRoles, eidtoles} from '@/api'
 export default {
   data () {
     return {
+      // 编辑用户数据
+      isShowEditer: false,
+      myEditForm: {
+        roleDesc: '',
+        roleName: ''
+      },
+      eitUserId: '',
+      // 添加用户类
+      isShowUser: false,
+      myAddForm: {},
       RolesData: [],
+      myRules: {
+        roleName: [
+          { required: true, message: '请输入角色名称', trigger: 'blur' }
+        ],
+        roleDesc: [
+          { required: true, message: '请输入角色描述', trigger: 'blur' }
+        ]
+      },
+      formLabelWidth: '80px',
       // 权限选择框的显示与隐藏
       grantVisible: false,
       // 权限列表
@@ -230,6 +283,61 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 弹出添加用户框
+    addUserInfo () {
+      this.isShowUser = true
+    },
+    // 提交添加角色
+    subMintRoles () {
+      addRoles(this.myAddForm)
+        .then(res => {
+          if (res.meta.status === 201) {
+            this.$message({
+              type: 'success',
+              message: res.meta.msg
+            })
+            this.initList()
+            this.isShowUser = false
+            this.myAddForm.roleName = ''
+            this.myAddForm.roleDesc = ''
+          } else {
+            this.$message({
+              type: 'warning',
+              message: res.meta.msg
+            })
+          }
+        })
+    },
+    // 编辑角色
+    handelEdit (row) {
+      this.isShowEditer = true
+      this.eitUserId = row.id
+      this.myEditForm = row
+    },
+    // 提交编辑用户信息
+    editRoles () {
+      let obj = {
+        id: this.eitUserId,
+        roleName: this.myEditForm.roleName,
+        roleDesc: this.myEditForm.roleDesc
+      }
+      eidtoles(obj)
+        .then(res => {
+          if (res.meta.status === 200) {
+            this.$message({
+              type: 'success',
+              message: res.meta.msg
+            })
+            this.initList()
+            this.isShowEditer = false
+          } else {
+            this.$message({
+              type: 'warning',
+              message: res.meta.msg
+            })
+          }
+        })
     }
   }
 }
