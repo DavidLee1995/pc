@@ -9,6 +9,9 @@ import Rights from '@/views/power/Rights.vue'
 import Goods from '@/views/goods/Goods.vue'
 import Categories from '@/views/goods/Category.vue'
 import Params from '@/views/goods/Params.vue'
+import AddGoods from '@/views/goods/AddGoods.vue'
+import Orders from '@/views/orders/Orders.vue'
+import Reports from '@/views/Reports/Reports.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -30,6 +33,10 @@ export default new Router({
     { name: 'rights', path: 'rights', component: Rights },
     { name: 'goods', path: 'goods', component: Goods },
     { name: 'categories', path: 'categories', component: Categories },
-    { name: 'params', path: 'params', component: Params }]
+    { name: 'params', path: 'params', component: Params },
+    { name: 'addgoods', path: 'addgoods', component: AddGoods },
+    { name: 'params', path: 'params', component: Params },
+    { name: 'orders', path: 'orders', component: Orders },
+    { name: 'reports', path: 'reports', component: Reports }]
   }]
 })

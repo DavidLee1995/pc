@@ -33,16 +33,16 @@
       <el-dialog title="添加商品名" :visible.sync="addGoods">
       <el-form :model="goodsParam" :rules="myRules" ref="myRef" >
         <el-form-item label="商品名" :label-width="formLabelWidth" prop="cat_name">
-          <el-input v-model="goodsParam.cat_name" auto-complete="off" ></el-input>
+          <el-input v-model="goodsParam.cat_name" auto-complete="off" @keydown.native.enter="subMintAdd('myRef')"></el-input>
         </el-form-item>
       </el-form>
 
       <el-form>
          <el-form-item label="父级名称" :label-width="formLabelWidth">
         <el-cascader
+          change-on-select
           :options="options"
           :props="defaultProps"
-          class="selectInfo"
           v-model="selectedOptions"
           @change="handleChange">
         </el-cascader>
@@ -212,7 +212,7 @@ export default {
         })
     },
     handleChange (value) {
-      console.log(value)
+      // console.log(value)
       this.goodsParam.cat_pid = value[value.length - 1]
       this.goodsParam.cat_level = value.length
     },
@@ -242,10 +242,11 @@ export default {
               this.addGoods = false
               // 清空弹出框
               this.goodsParam.cat_name = ''
+              this.selectedOptions.length = 0
             }
           })
       })
-      console.log(123)
+      // console.log(123)
     }
   }
 

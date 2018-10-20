@@ -61,7 +61,7 @@ export default {
     menuList()
       .then(res => {
         this.menuInfo = res.data
-        console.log(res)
+        // console.log(res)
       })
   },
 

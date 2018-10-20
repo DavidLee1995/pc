@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // 设置基本路径
-axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1'
+axios.defaults.baseURL = '/api/private/v1'
 // 设置拦截器
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
@@ -33,9 +33,9 @@ export const grantRoles = obj => axios.get('/roles').then(res => res.data)
 // 角色分配
 export const grantGive = obj => axios.put(`/users/${obj.id}/role`, { rid: obj.rid }).then(res => res.data)
 // 添加角色
-export const addRoles = obj => axios.post(`roles`, obj).then(res => res.data)
+export const addRoles = obj => axios.post(`/roles`, obj).then(res => res.data)
 // 编辑角色信息
-export const eidtoles = obj => axios.put(`roles/${obj.id}`, obj).then(res => res.data)
+export const eidtoles = obj => axios.put(`/roles/${obj.id}`, obj).then(res => res.data)
 // 权限列表
 export const RightsList = type => axios.get(`/rights/${type}`).then(res => res.data)
 // 删除权限
@@ -51,6 +51,13 @@ export const addGoodsBtn = typemun => axios.get(`/categories`, { params: typemun
 // 添加商品分类名称
 export const addGoodsName = obj => axios.post(`/categories`, obj).then(res => res.data)
 // 删除商品分类
-export const delGoodsName = id => axios.delete(`categories/${id}`).then(res => res.data)
+export const delGoodsName = id => axios.delete(`/categories/${id}`).then(res => res.data)
 // 编辑商品分类
-export const editGoodsName = obj => axios.put(`categories/${obj.id}`, {cat_name: obj.cat_name}).then(res => res.data)
+export const editGoodsName = obj => axios.put(`/categories/${obj.id}`, { cat_name: obj.cat_name }).then(res => res.data)
+// 订单数据获取
+export const getorders = obj => axios.get(`orders`, { params: obj }).then(res => res.data)
+// 查询订单
+export const searchorders = id => axios.get(`orders/${id}`).then(res => res.data)
+
+// 数据统计
+export const ordersGoods = type => axios.get(`reports/type/${type}`).then(res => res.data)
